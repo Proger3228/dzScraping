@@ -1,10 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import cheerio from 'cheerio';
+import needle from 'needle';
 
+const dataPath = "./data.json"
 const homeworkSelector = "#onetidDoclibViewTbl0 tr:not(:first-of-type) .ms-vb-title a:not([id])";
 
-export const getSavedHomework = async () => {
-    const file = fs.readFileSync( path.resolve( "", "./homework.json" ) ).toString();
+export const getSavedHomework = () => {
+    const file = fs.readFileSync( path.resolve( "", dataPath ) ).toString();
     const object = JSON.parse( file );
 
     return object.homeworks;
@@ -30,9 +33,10 @@ export const getHomework = ( html ) => {
     homeworks.each( ( _, el ) => {
         const title = $( el ).text();
         const { href } = $( el ).attr();
+
         const hw = {
             title,
-            href
+            href: href.split( " " ).join( "%20" )
         }
 
         items.push( hw );
@@ -45,9 +49,9 @@ export const saveHomeworks = ( homeworks ) => {
     if ( !Array.isArray( homeworks ) ) throw new TypeError( "Homeworks must be an array" );
     if ( homeworks.some( hw => !( "title" in hw ) || !( "href" in hw ) || Object.keys( hw ).length > 2 ) ) throw new TypeError( "All homeworks must have only title and href" )
 
-    const oldFile = JSON.parse( fs.readFileSync( path.resolve( "", "./homework.json" ) ).toString() );
+    const oldFile = JSON.parse( fs.readFileSync( path.resolve( "", dataPath ) ).toString() );
 
-    fs.writeFileSync( path.resolve( "", "./homework.json" ), JSON.stringify( { ...oldFile, homeworks } ) );
+    fs.writeFileSync( path.resolve( "", dataPath ), JSON.stringify( { ...oldFile, homeworks } ) );
 }
 
 export const homeworkComparator = ( oldHw, newHw ) => {

@@ -1,8 +1,22 @@
-import needle from "needle";
-import fs from "fs";
-import path from "path";
-import cheerio from "cheerio";
+import Telegram from "telegraf"
+import CheckUpdates from "./utils/notifying.js";
+import { hasUser, addUser } from "./utils/users.js";
 
-const URL = "https://ciur.ru/izh/s29_izh/DocLib39/Forms/AllItems.aspx?RootFolder=%2fizh%2fs29%5fizh%2fDocLib39%2f10%d0%91&amp;FolderCTID=0x01200025E822D1C298894584C82F753E358CB1"
+
+const TOKEN = "1140565061: AAGBmLhcbMAh5GpCFv1phmSdZyqNcgTAfO8";
+
+const bot = new Telegram.Telegraf( TOKEN );
+
+bot.command( "start", ( ctx ) => {
+    const { update: { message: { from: user } } } = ctx;
+
+    if ( !hasUser( user.id ) ) {
+        addUser( user );
+    }
+} )
+
+setInterval( CheckUpdates, 86400000 );
+
+bot.startPolling( () => console.log( "Connected" ) );
 
 
