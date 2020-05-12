@@ -15,7 +15,7 @@ bot.command( "start", ( ctx ) => {
     }
 } )
 
-setInterval( CheckUpdates, 86400000 );
+setInterval( CheckUpdates, 1000 * 60 );
 
 bot.startPolling( () => console.log( "Connected" ) );
 

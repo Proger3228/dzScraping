@@ -20,6 +20,8 @@ export default async () => {
     const newHw = await getHomework( html );
     const oldHw = getSavedHomework();
 
+    console.log( "Checking" );
+
     if ( !homeworkComparator( newHw, oldHw ) ) {
         let message = "";
 
