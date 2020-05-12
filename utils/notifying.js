@@ -1,4 +1,4 @@
-const { Telegram } = require( 'Telegraf' );
+const { Telegram } = require( 'telegraf' );
 const { getUsers } = require( "./users.js" );
 const { getHomework, getSavedHomework, homeworkComparator, getHtml, saveHomeworks } = require( "./homework.js" );
 
