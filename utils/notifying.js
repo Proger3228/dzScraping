@@ -1,13 +1,10 @@
-import Telegram from 'Telegraf';
-import { getUsers } from "./users.js";
-import { getHomework, getSavedHomework, homeworkComparator, getHtml, saveHomeworks } from "./homework.js";
+const { Telegram } = require( 'Telegraf' );
+const { getUsers } = require( "./users.js" );
+const { getHomework, getSavedHomework, homeworkComparator, getHtml, saveHomeworks } = require( "./homework.js" );
 
-const TOKEN = "1140565061:AAGBmLhcbMAh5GpCFv1phmSdZyqNcgTAfO8";
-const URL = "https://ciur.ru/izh/s29_izh/DocLib39/Forms/AllItems.aspx?RootFolder=%2fizh%2fs29%5fizh%2fDocLib39%2f10%d0%91&amp;FolderCTID=0x01200025E822D1C298894584C82F753E358CB1";
+const bot = new Telegram( process.env.TOKEN );
 
-const bot = new Telegram.Telegram( TOKEN );
-
-export const notify = ( message ) => {
+const notify = ( message ) => {
     const users = getUsers();
 
     for ( const { id } of users ) {
@@ -15,8 +12,8 @@ export const notify = ( message ) => {
     }
 }
 
-export default async () => {
-    const html = await getHtml( URL );
+module.exports = async () => {
+    const html = await getHtml( process.env.URL );
     const newHw = await getHomework( html );
     const oldHw = getSavedHomework();
 

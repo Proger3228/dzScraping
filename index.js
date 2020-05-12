@@ -1,11 +1,8 @@
-import Telegram from "telegraf"
-import CheckUpdates from "./utils/notifying.js";
-import { hasUser, addUser } from "./utils/users.js";
+const { Telegraf } = require( "telegraf" );
+const CheckUpdates = require( "./utils/notifying.js" );
+const { hasUser, addUser } = require( "./utils/users.js" );
 
-
-const TOKEN = "1140565061: AAGBmLhcbMAh5GpCFv1phmSdZyqNcgTAfO8";
-
-const bot = new Telegram.Telegraf( TOKEN );
+const bot = new Telegraf( process.env.TOKEN );
 
 bot.command( "start", ( ctx ) => {
     const { update: { message: { from: user } } } = ctx;
@@ -17,6 +14,6 @@ bot.command( "start", ( ctx ) => {
 
 setInterval( CheckUpdates, 1000 * 60 );
 
-bot.startPolling( () => console.log( "Connected" ) );
+bot.startPolling( 3000 );
 
 

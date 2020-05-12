@@ -1,19 +1,19 @@
-import fs from 'fs';
-import path from 'path';
-import cheerio from 'cheerio';
-import needle from 'needle';
+const fs = require( 'fs' );
+const path = require( 'path' );
+const cheerio = require( 'cheerio' );
+const needle = require( 'needle' );
 
 const dataPath = "./data.json"
 const homeworkSelector = "#onetidDoclibViewTbl0 tr:not(:first-of-type) .ms-vb-title a:not([id])";
 
-export const getSavedHomework = () => {
+exports.getSavedHomework = () => {
     const file = fs.readFileSync( path.resolve( "", dataPath ) ).toString();
     const object = JSON.parse( file );
 
     return object.homeworks;
 }
 
-export const getHtml = ( url ) => {
+exports.getHtml = ( url ) => {
     return new Promise( ( resolve, reject ) => {
         needle.get( url, ( err, res ) => {
             if ( err ) throw err;
@@ -23,7 +23,7 @@ export const getHtml = ( url ) => {
     } )
 }
 
-export const getHomework = ( html ) => {
+exports.getHomework = ( html ) => {
     let homeworks;
     const items = [];
     const $ = cheerio.load( html );
@@ -45,7 +45,7 @@ export const getHomework = ( html ) => {
     return items;
 }
 
-export const saveHomeworks = ( homeworks ) => {
+exports.saveHomeworks = ( homeworks ) => {
     if ( !Array.isArray( homeworks ) ) throw new TypeError( "Homeworks must be an array" );
     if ( homeworks.some( hw => !( "title" in hw ) || !( "href" in hw ) || Object.keys( hw ).length > 2 ) ) throw new TypeError( "All homeworks must have only title and href" )
 
@@ -54,7 +54,7 @@ export const saveHomeworks = ( homeworks ) => {
     fs.writeFileSync( path.resolve( "", dataPath ), JSON.stringify( { ...oldFile, homeworks } ) );
 }
 
-export const homeworkComparator = ( oldHw, newHw ) => {
+exports.homeworkComparator = ( oldHw, newHw ) => {
     if ( oldHw.length !== newHw.length ) return false;
     return oldHw.every( ( { title, href } ) => newHw.find( el => el.title === title && el.href === href ) !== undefined );
 }
