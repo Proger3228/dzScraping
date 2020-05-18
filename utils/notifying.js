@@ -5,14 +5,18 @@ const { getHomework, getSavedHomework, homeworkComparator, getHtml, saveHomework
 const bot = new Telegram( process.env.TOKEN );
 
 const notify = ( message, userId ) => {
-    if ( userId !== undefined ) {
-        const users = getUsers();
-        console.log( users );
-        for ( const { id } of users ) {
-            bot.sendMessage( id, message );
+    try {
+        if ( userId !== undefined ) {
+            const users = getUsers();
+            console.log( users );
+            for ( const { id } of users ) {
+                bot.sendMessage( id, message );
+            }
+        } else {
+            bot.sendMessage( userId, message );
         }
-    } else {
-        bot.sendMessage( userId, message );
+    } catch ( err ) {
+        console.log( err );
     }
 }
 

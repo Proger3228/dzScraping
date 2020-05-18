@@ -50,7 +50,9 @@ exports.saveHomeworks = ( homeworks ) => {
 
     const oldFile = require( path.resolve( "", dataPath ) );
 
-    fs.writeFileSync( path.resolve( "", dataPath ), JSON.stringify( { ...oldFile, homeworks } ) );
+    fs.writeFile( path.resolve( "", dataPath ), JSON.stringify( { ...oldFile, homeworks } ), ( err ) => {
+        if ( err ) throw err;
+    } );
 }
 
 exports.homeworkComparator = ( oldHw, newHw ) => {
