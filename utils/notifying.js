@@ -7,7 +7,7 @@ const bot = new Telegram( process.env.TOKEN );
 const notify = ( message, userId ) => {
     if ( userId !== undefined ) {
         const users = getUsers();
-
+        console.log( users );
         for ( const { id } of users ) {
             bot.sendMessage( id, message );
         }
@@ -16,10 +16,10 @@ const notify = ( message, userId ) => {
     }
 }
 
-module.exports = async ( userId ) => {
+module.exports = async ( userId, isSendAll = false ) => {
     const html = await getHtml( process.env.URL );
     const newHw = await getHomework( html );
-    const oldHw = getSavedHomework();
+    const oldHw = isSendAll ? [] : getSavedHomework();
 
     console.log( "Checking" );
 

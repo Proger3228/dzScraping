@@ -11,11 +11,9 @@ const addUser = ( user ) => {
 
     const users = file.users;
 
-    console.log( "User created: " + user.name );
-
-    fs.writeFileSync( path.resolve( "", dataPath ), JSON.stringify( { ...file, users: [ ...users, user ] } ) );
-
-    notify( user.id );
+    fs.writeFile( path.resolve( "", dataPath ), JSON.stringify( { ...file, users: [ ...users, user ] } ), () => {
+        console.log( "User created: ", user );
+    } );
 }
 
 const hasUser = ( id ) => {
