@@ -1,17 +1,21 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
+const notify = require( './notifying' );
 
 const dataPath = "./data.json"
 
 const addUser = ( user ) => {
     if ( !validateUser( user ) ) throw new TypeError( "user must be a valid user" )
 
-    const file = JSON.parse( fs.readFileSync( path.resolve( "", dataPath ) ).toString() );
+    const file = require( path.resolve( "", dataPath ) );
 
     const users = file.users;
-    users.push( user );
 
-    fs.writeFileSync( path.resolve( "", dataPath ), JSON.stringify( { ...file, users } ) );
+    console.log( "User created: " + user.name );
+
+    fs.writeFileSync( path.resolve( "", dataPath ), JSON.stringify( { ...file, users: [ ...users, user ] } ) );
+
+    notify( user.id );
 }
 
 const hasUser = ( id ) => {
@@ -21,11 +25,11 @@ const hasUser = ( id ) => {
 }
 
 const getUsers = () => {
-    const file = fs.readFileSync( path.resolve( "", dataPath ) ).toString();
-    const object = JSON.parse( file );
+    const object = require( path.resolve( "", dataPath ) );
 
     return object.users;
 }
+
 const validateUser = ( user ) => {
     if ( user.toString() !== "[object Object]" ) return false;
 

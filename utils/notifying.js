@@ -4,15 +4,19 @@ const { getHomework, getSavedHomework, homeworkComparator, getHtml, saveHomework
 
 const bot = new Telegram( process.env.TOKEN );
 
-const notify = ( message ) => {
-    const users = getUsers();
+const notify = ( message, userId ) => {
+    if ( userId !== undefined ) {
+        const users = getUsers();
 
-    for ( const { id } of users ) {
-        bot.sendMessage( id, message );
+        for ( const { id } of users ) {
+            bot.sendMessage( id, message );
+        }
+    } else {
+        bot.sendMessage( userId, message );
     }
 }
 
-module.exports = async () => {
+module.exports = async ( userId ) => {
     const html = await getHtml( process.env.URL );
     const newHw = await getHomework( html );
     const oldHw = getSavedHomework();
@@ -20,18 +24,18 @@ module.exports = async () => {
     console.log( "Checking" );
 
     if ( !homeworkComparator( newHw, oldHw ) ) {
-        let message = "";
+        let message = "Появилось новое дз: \n";
 
         if ( newHw.length > oldHw.length ) {
             for ( const hw of newHw ) {
                 if ( oldHw.find( ( { title } ) => title === hw.title ) === undefined ) {
-                    message += `Появилось новое дз: ${hw.title}\n ${hw.href}\n\n`;
+                    message += `${hw.title}\n ${hw.href}\n\n`;
                 }
             }
 
             if ( message.trim() !== "" ) {
                 saveHomeworks( newHw );
-                notify( message );
+                notify( message, userId );
             }
         }
     }

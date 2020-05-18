@@ -7,8 +7,7 @@ const dataPath = "./data.json"
 const homeworkSelector = "#onetidDoclibViewTbl0 tr:not(:first-of-type) .ms-vb-title a:not([id])";
 
 exports.getSavedHomework = () => {
-    const file = fs.readFileSync( path.resolve( "", dataPath ) ).toString();
-    const object = JSON.parse( file );
+    const object = require( path.resolve( "", dataPath ) );
 
     return object.homeworks;
 }
@@ -49,7 +48,7 @@ exports.saveHomeworks = ( homeworks ) => {
     if ( !Array.isArray( homeworks ) ) throw new TypeError( "Homeworks must be an array" );
     if ( homeworks.some( hw => !( "title" in hw ) || !( "href" in hw ) || Object.keys( hw ).length > 2 ) ) throw new TypeError( "All homeworks must have only title and href" )
 
-    const oldFile = JSON.parse( fs.readFileSync( path.resolve( "", dataPath ) ).toString() );
+    const oldFile = require( path.resolve( "", dataPath ) );
 
     fs.writeFileSync( path.resolve( "", dataPath ), JSON.stringify( { ...oldFile, homeworks } ) );
 }
